@@ -139,16 +139,50 @@ for fq in $fquery; do
     if [ ! -z "$inputextension" ]; then
         fin=$(realpath ${fq%.rqg}.$inputextension)
         fout=$(realpath ${fq%.rqg}.$outputextension)
-        jarcommand=$(buildcommand -q $fq -o $fout --source \"$source\"=\"file://$fin\")
-        echo $jarcommand > $redirection
-        eval $jarcommand > $redirection
-    elif [ ! -z "$finput" ]; then
-        for fi in $finput; do
-            fin=$(realpath $fi)
-            fout=${fin%.$finputextension}.$outputextension # check if this expansion works
+        if [ ! -z $split ]; then
+            echo '' > $fout.tmp
+                tail -n +2 "$fin" | split -l $split - "$fin"_split_
+                for fsplit in "$finput"_split_*; do
+                    head -n 1 "$fin" > "$fin.tmp"
+                    cat $fsplit >> "$fin.tmp"
+                    jarcommand=$(buildcommand -q $fq -o $fout.tmp -oa --source \"$source\"=\"file://$fin.tmp\")
+                    echo $jarcommand > $redirection
+                    eval $jarcommand > $redirection
+                    rm $fsplit
+                done
+                sed -i -e '/^@prefix/{w $fout.prefixes' -e 'd}' $fout.tmp
+                sort -u $fout.prefixes > $fout
+                cat $fout.tmp >> $fout
+                rm $fin.tmp $fout.tmp $fout.prefixes
+        else
             jarcommand=$(buildcommand -q $fq -o $fout --source \"$source\"=\"file://$fin\")
             echo $jarcommand > $redirection
             eval $jarcommand > $redirection
+        fi
+    elif [ ! -z "$finput" ]; then
+        for fi in $finput; do
+            fin=$(realpath $fi)
+            fout=${fin%.*}.$outputextension
+            if [ ! -z $split ]; then
+                echo '' > $fout.tmp
+                tail -n +2 "$fin" | split -l $split - "$fin"_split_
+                for fsplit in "$finput"_split_*; do
+                    head -n 1 "$fin" > "$fin.tmp"
+                    cat $fsplit >> "$fin.tmp"
+                    jarcommand=$(buildcommand -q $fq -o $fout.tmp -oa --source \"$source\"=\"file://$fin.tmp\")
+                    echo $jarcommand > $redirection
+                    eval $jarcommand > $redirection
+                    rm $fsplit
+                done
+                sed -i -e "/^@prefix/{w $fout.prefixes" -e 'd}' $fout.tmp
+                sort -u $fout.prefixes > $fout
+                cat $fout.tmp >> $fout
+                rm $fin.tmp $fout.tmp $fout.prefixes
+            else 
+                jarcommand=$(buildcommand -q $fq -o $fout --source \"$source\"=\"file://$fin\")
+                echo $jarcommand > $redirection
+                eval $jarcommand > $redirection
+            fi
         done
     else
         foutput=$(realpath ${fq%.rqg}.$outputextension)
