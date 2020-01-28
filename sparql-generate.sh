@@ -4,7 +4,7 @@ function showhelp {
 	echo
 	echo "Script to automate sparql-generate executions. Version 0.1, 2020-01-31"
 	echo
-	echo "Usage $0 [OPTION] querypath"
+	echo "Usage $0 [OPTION]"
 	echo
     # echo "  -c, --config=<path>             path for configuration file"
     echo "  -e, --inputextension <iext>     extension of input files; adds input file with the same name as the query file, replacing .rqg by .<iext> (.ttl if not set)"
@@ -18,6 +18,8 @@ function showhelp {
     echo "  -v, --verbose                   verbose output"
     echo "  -V, --version [1|2]             sparql-generate version to use. 1 for 1.1 and 2 for 2.0 (default: 1)"
 	echo
+    echo "Important note: if a pattern is used as parameter for query or input files, it must be provided inside double quotes (\")"
+    echo
 }
 
 function buildcommand {
@@ -146,8 +148,8 @@ for fq in $fquery; do
                     head -n 1 "$fin" > "$fin.tmp"
                     cat $fsplit >> "$fin.tmp"
                     jarcommand=$(buildcommand -q $fq -o $fout.tmp -oa --source \"$source\"=\"file://$fin.tmp\")
-                    echo $jarcommand > $redirection
-                    eval $jarcommand > $redirection
+                    echo $jarcommand
+                    eval $jarcommand 2> $redirection
                     rm $fsplit
                 done
                 sed -i -e '/^@prefix/{w $fout.prefixes' -e 'd}' $fout.tmp
@@ -156,8 +158,8 @@ for fq in $fquery; do
                 rm $fin.tmp $fout.tmp $fout.prefixes
         else
             jarcommand=$(buildcommand -q $fq -o $fout --source \"$source\"=\"file://$fin\")
-            echo $jarcommand > $redirection
-            eval $jarcommand > $redirection
+            echo $jarcommand 
+            eval $jarcommand 2> $redirection
         fi
     elif [ ! -z "$finput" ]; then
         for fi in $finput; do
@@ -170,24 +172,24 @@ for fq in $fquery; do
                     head -n 1 "$fin" > "$fin.tmp"
                     cat $fsplit >> "$fin.tmp"
                     jarcommand=$(buildcommand -q $fq -o $fout.tmp -oa --source \"$source\"=\"file://$fin.tmp\")
-                    echo $jarcommand > $redirection
-                    eval $jarcommand > $redirection
+                    echo $jarcommand
+                    eval $jarcommand 2> $redirection
                     rm $fsplit
                 done
                 sed -i -e "/^@prefix/{w $fout.prefixes" -e 'd}' $fout.tmp
                 sort -u $fout.prefixes > $fout
                 cat $fout.tmp >> $fout
                 rm $fin.tmp $fout.tmp $fout.prefixes
-            else 
+            else
                 jarcommand=$(buildcommand -q $fq -o $fout --source \"$source\"=\"file://$fin\")
-                echo $jarcommand > $redirection
-                eval $jarcommand > $redirection
+                echo $jarcommand
+                eval $jarcommand 2> $redirection
             fi
         done
     else
         foutput=$(realpath ${fq%.rqg}.$outputextension)
         jarcommand=$(buildcommand -q $fq -o $foutput)
-        echo $jarcommand > $redirection    
+        echo $jarcommand    
         eval $jarcommand 2> $redirection  
     fi
 done
