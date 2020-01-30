@@ -1,6 +1,8 @@
 #!/bin/bash
 
 # This script makes use of csvtk, downloadable at: https://bioinf.shenwei.me/csvtk/
+# This script makes use of mdbtools, downloadable at: http://mdbtools.sourceforge.net/
+# This script makes use of unzip, downloadable at: http://infozip.sourceforge.net/
 
 # Change variables to perform operation
 declare DOWNLOAD_FILES=true

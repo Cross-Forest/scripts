@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# This script assumes you have java installed in your system and the sparql-generate jars in /usr/local/lib/
+
 function showhelp {
 	echo
 	echo "Script to automate sparql-generate executions. Version 0.1, 2020-01-31"
