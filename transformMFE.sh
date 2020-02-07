@@ -1,7 +1,5 @@
 #!/bin/sh
 
-#$1 should contain the folder where the shp files are
-
 s=5 # simplification level
 
 FILES=$1

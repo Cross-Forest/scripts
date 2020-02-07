@@ -49,13 +49,13 @@ then
     checkexitstatus $?
     curl -k https://www.miteco.gob.es/es/biodiversidad/servicios/banco-datos-naturaleza/informacion-disponible/mfe50_descargas_rioja.aspx | grep ".zip" | sed -n "/href/ s/.*href=['\"]\([^'\"]*\)['\"].*/\1/p" |  sed 's|^|https://www.miteco.gob.es|'  >> links.txt
     checkexitstatus $?
-    wget --no-check-certificate -i links.txt -P ./data2/
+    wget --no-check-certificate -i links.txt -P ./data/
     checkexitstatus $?
 fi
 
 if [ ${UNCOMPRESS_FILES} = true ]
 then
     # Uncompressing files and removing compressed files
-    unzip -o -d ./data2 ./data2/"*.zip"
+    unzip -o -d ./data ./data/"*.zip"
     rm ./data/*.zip
 fi
