@@ -50,7 +50,7 @@ do
   echo "*** Aggregating polygons by use ***"
   mapshaper $box -each 'CLAS_IFN2=Math.floor(CLAS_IFN/10)' -dissolve CLAS_IFN2 -explode -each "PROV_MFE50=$province" -o $dissolved
   echo "*** Adding subpoligons to superpolygons ***"
-  mapshaper $dissolved -join $box calc='SUBPOLYGONS=collect(this.properties), Shape_Area=sum(Shape_Area), Shape_Leng=sum(Shape_Leng)' fields="POLIGON" -o $joined
+  mapshaper $dissolved -join $box calc='SUBPOLYGONS=collect(this.properties), Shape_Area=sum(Shape_Area), Shape_Leng=sum(Shape_Leng)' -o $joined
   echo "*** Simplifying merged layer ***"
   mapshaper $joined -simplify $s% -clean -o $simplified2
   echo "*** Adding boundig box to merged layer ***"
@@ -62,7 +62,15 @@ do
       var SPECIES = {}
       var TFCCTOT=0;
       var TFCCARB=0;
+      var POLIGON=""
       for (var polygon in SUBPOLYGONS) {
+
+        if (POLIGON == "") {
+          POLIGON = SUBPOLYGONS[polygon].POLIGON;
+        } else {
+          POLIGON = POLIGON + "-" + SUBPOLYGONS[polygon].POLIGON;
+        }
+        
         var proportion=(SUBPOLYGONS[polygon].Shape_Area/Shape_Area);
         
         if (USES[SUBPOLYGONS[polygon].CLAS_IFN] == undefined) {
@@ -80,7 +88,11 @@ do
 
         TFCCTOT+=SUBPOLYGONS[polygon].TFCCTOT*proportion;
         TFCCARB+=SUBPOLYGONS[polygon].TFCCARB*proportion;
+
       }
+
+
+
       var max = null;
 		  var CLAS_IFN = null;
       for (var use in USES) {

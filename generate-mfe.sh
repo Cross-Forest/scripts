@@ -1,6 +1,6 @@
 #!/bin/bash
 
-./extractMFE50.sh
+# ./extractMFE50.sh
 
 ./transformMFE.sh "data/*.shp"
 
