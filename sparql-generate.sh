@@ -169,10 +169,17 @@ for fq in $fquery; do
             fout=${fin%.*}.$outputextension
             if [ ! -z $split ]; then
                 echo '' > $fout.tmp
-                tail -n +2 "$fin" | split -l $split - "$fin"_split_
+                if [ ${fin: -5}  == ".json" ]; then
+                    tail -n +2 "$fin" | head -n -1 | split -l $split - "$fin"_split_
+                else
+                    tail -n +2 "$fin" | split -l $split - "$fin"_split_
+                fi
                 for fsplit in "$finput"_split_*; do
                     head -n 1 "$fin" > "$fin.tmp"
-                    cat $fsplit >> "$fin.tmp"
+                    cat $fsplit | sed '$s/,$//' >> "$fin.tmp"
+                    if [ ${fin: -5} == ".json" ]; then
+                        tail -n -1 "$fin" >> "$fin.tmp"
+                    fi
                     jarcommand=$(buildcommand -q $fq -o $fout.tmp -oa --source \"$source\"=\"file://$fin.tmp\")
                     echo $jarcommand
                     eval $jarcommand 2> $redirection

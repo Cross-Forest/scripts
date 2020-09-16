@@ -55,7 +55,7 @@ do
   mapshaper $joined -simplify $s% -clean -o $simplified2
   echo "*** Adding boundig box to merged layer ***"
   mapshaper $simplified2 -each 'BBOX=this.bounds' -o $box2
-
+  echo "*** Adding superpolygons ID ***"
   mapshaper -i $box2 -each \
     'if (SUBPOLYGONS != null) {
       var USES = {};

@@ -2,7 +2,7 @@
 
 # ./extractMFE50.sh
 
-./transformMFE.sh "data/*.shp"
+./transformMFE50.sh "data/*.shp"
 
 ./sparql-generate.sh -q ../sparql-generate/mfe/mfe50.rqg -i "data/*_m_sp_r_s5_b.json" -v
 ./sparql-generate.sh -q ../sparql-generate/mfe/mfe50_merged.rqg -i "data/*_m_sp_r_s5_b_d_j_s5_b_c.json" -v
