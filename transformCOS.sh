@@ -39,16 +39,5 @@ do
   echo "*** Adding boundig box to merged layer *** $(date) ***"
   mapshaper $simplified2 -each 'BBOX=this.bounds' -o $box2
   echo "*** Adding superpolygons ID *** $(date) ***"
-   mapshaper -i $box2 -each \
-    'if (SUBPOLYGONS != null) {
-      var POLYGON=""
-      for (var pol in SUBPOLYGONS) {
-
-        if (POLYGON == "") {
-          POLYGON = SUBPOLYGONS[pol];
-        } else {
-          POLYGON = POLYGON + "-" + SUBPOLYGONS[pol];
-        }
-      }
-    }' -o $calculations
+  mapshaper -i $box2 -each 'POLIGON=this.id' -o $calculations
 done
