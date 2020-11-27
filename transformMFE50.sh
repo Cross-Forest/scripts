@@ -62,14 +62,8 @@ do
       var SPECIES = {}
       var TFCCTOT=0;
       var TFCCARB=0;
-      var POLIGON=""
+      var POLIGON=this.id
       for (var polygon in SUBPOLYGONS) {
-
-        if (POLIGON == "") {
-          POLIGON = SUBPOLYGONS[polygon].POLIGON;
-        } else {
-          POLIGON = POLIGON + "-" + SUBPOLYGONS[polygon].POLIGON;
-        }
         
         var proportion=(SUBPOLYGONS[polygon].Shape_Area/Shape_Area);
         
@@ -82,16 +76,11 @@ do
           if (SPECIES[SUBPOLYGONS[polygon].SPECIES[species][0]] == undefined) SPECIES[SUBPOLYGONS[polygon].SPECIES[species][0]] = 0;
           SPECIES[SUBPOLYGONS[polygon].SPECIES[species][0]]+=SUBPOLYGONS[polygon].SPECIES[species][1]*proportion;
         }
-        for (var species in SPECIES) {
-          SPECIES[species]=Math.round(SPECIES[species]);
-        }
-
+        
         TFCCTOT+=SUBPOLYGONS[polygon].TFCCTOT*proportion;
         TFCCARB+=SUBPOLYGONS[polygon].TFCCARB*proportion;
 
       }
-
-
 
       var max = null;
 		  var CLAS_IFN = null;
@@ -100,9 +89,14 @@ do
           CLAS_IFN = use;
           max = USES[use];
         }
-        USES[use]=Math.round(USES[use]);
+        USES[use]=Math.round((USES[use]+Number.EPSILON)*100)/100;
       }
-      TFCCTOT=Math.round(TFCCTOT);
-      TFCCARB=Math.round(TFCCARB);
+
+      for (var species in SPECIES) {
+        SPECIES[species]=Math.round((SPECIES[species]+Number.EPSILON)*100)/100;
+      }
+      
+      TFCCTOT=Math.round((TFCCTOT+Number.EPSILON)*100)/100;
+      TFCCARB=Math.round((TFCCARB+Number.EPSILON)*100)/100;
     }' -drop fields="max,proportion" -o $calculations
 done
