@@ -166,7 +166,7 @@ for fq in $fquery; do
     elif [ ! -z "$finput" ]; then
         for fi in $finput; do
             fin=$(realpath $fi)
-            fout=${fin%.*}.$outputextension
+            fout=${fi%.*}.$outputextension
             if [ ! -z $split ]; then
                 echo '' > $fout.tmp
                 if [ ${fin: -5}  == ".json" ]; then
