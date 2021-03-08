@@ -1,8 +1,5 @@
 #!/bin/sh
 
-# mapshaper COS2018_Forest.shp -proj +proj=longlat +datum=WGS84 +no_defs -clean -each 'POLYGON=this.id' -o format=geojson precision=0.000001 COS2018_Forest.json
-
-
 s=5 # simplification level
 
 FILES=$1
