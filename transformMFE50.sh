@@ -19,19 +19,6 @@ do
   box2=${simplified2%.json}_b.json
   calculations=${box2%.json}_c.json
 
-  # echo "f=$f"
-  # echo "real=$real"
-  # echo "json=$json"
-  # echo "municipalities=$municipalities"
-  # echo "species=$species"
-  # echo "clean=$clean"
-  # echo "simplified=$simplified"
-  # echo "box=$box"
-  # echo "dissolved=$dissolved"
-  # echo "joined=$joined"
-  # echo "simplified2=$simplified2"
-  # echo "box2=$box2"
-
   echo "---------------------------------"
   echo "Processing files for province: $province"
 
