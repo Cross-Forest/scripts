@@ -24,8 +24,8 @@ then
             table=`echo $table | tr "[:upper:]" "[:lower:]"`
             tableFile="./tables_ifi/temp/${table// /}.csv"
             #echo Exporting table ${table} from file ${dbFile} to ${tableFile}
-            #the 1st sed is necessary because there is (at least) one table with wrong name table
-            mdb-export ${dbFile} "${table}" | awk -f scientific2decimal_precision8.awk  > "${tableFile}"
+	    #the 1st awk is necessary because there is an empty field in NUTS3 field sometimes (IFN4) so we duplicate NUTS2
+            mdb-export ${dbFile} "${table}" | awk 'BEGIN{FS=","; OFS="," } { if (NR>1) { if($4=="") { print $0,$3,"nuts2" } else { print $0,$4,"nuts3" }}  else { print $0,"idNUTS","typeNUTS" } }' | awk -f scientific2decimal_precision8.awk  > "${tableFile}"
         done < tables_ifi.txt
     done
     sort -u -o allTables_ifi.txt allTables_ifi.txt
