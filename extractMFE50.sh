@@ -10,8 +10,6 @@ function checkexitstatus {
 # Change variables to perform operation
 declare DOWNLOAD_FILES=true
 declare UNCOMPRESS_FILES=true
-declare EXTRACT_TABLES=true
-declare MERGE_TABLES=true
 
 if [ ${DOWNLOAD_FILES} = true ]
 then
