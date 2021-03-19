@@ -30,11 +30,18 @@ do
   echo "*** Aggregating polygons by use *** $(date) ***"
   mapshaper $box -dissolve COS2018_n1 -explode -o $dissolved
   echo "*** Adding subpoligons to superpolygons *** $(date) ***"
-  mapshaper $dissolved -join $box calc='SUBPOLYGONS=collect(POLYGON),AREA=sum(AREA),AREA2=sum(AREA2)' -o $joined
+  mapshaper $dissolved -join $box calc='SUBPOLYGONS=collect(this.properties)' -o $joined
   echo "*** Simplifying merged layer *** $(date) ***"
   mapshaper $joined -simplify $s% -clean -o $simplified2
   echo "*** Adding boundig box to merged layer *** $(date) ***"
   mapshaper $simplified2 -each 'BBOX=this.bounds' -o $box2
-  echo "*** Adding superpolygons ID *** $(date) ***"
-  mapshaper -i $box2 -each 'POLYGON=this.id' -o $calculations
+  echo "*** Adding superpolygons ID and calculating merged areas*** $(date) ***"
+  mapshaper -i $box2 -each \
+    'if (SUBPOLYGONS != null) {
+      var POLYGON=this.id;
+      var AREA=0;
+      for (var polygon in SUBPOLYGONS) {
+        AREA+=Math.max(SUBPOLYGONS[polygon].AREA,SUBPOLYGONS[polygon].AREA2);
+      }
+    }' -drop fields="proportion" -o $calculations
 done
