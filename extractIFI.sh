@@ -12,22 +12,19 @@ then
     rm -f allTables_ifi.txt
     rm -fr tables_ifi/temp
     mkdir -p tables_ifi/temp
-    # Extracting all tables from all files. Each table from each file goes to a different file
-    for dbFile in ../data_ifi/*.accdb
-    do
-        echo Exporting file ${dbFile}
-        mdb-tables -1 ${dbFile} > tables_ifi.txt
-        cat tables_ifi.txt | tr "[:upper:]" "[:lower:]" >> allTables_ifi.txt
+    # Extracting all tables from file. Each table from each file goes to a different file
+    echo Exporting file $1
+    mdb-tables -1 $1 > tables_ifi.txt
+    cat tables_ifi.txt | tr "[:upper:]" "[:lower:]" >> allTables_ifi.txt
         
-        while IFS="" read -r table || [ -n "$table" ]
-        do
-            table=`echo $table | tr "[:upper:]" "[:lower:]"`
-            tableFile="./tables_ifi/temp/${table// /}.csv"
-            #echo Exporting table ${table} from file ${dbFile} to ${tableFile}
-	    #the 1st awk is necessary because there is an empty field in NUTS3 field sometimes (IFN4) so we duplicate NUTS2
-            mdb-export ${dbFile} "${table}" | awk 'BEGIN{FS=","; OFS="," } { if (NR>1) { if($4=="") { print $0,$3,"nuts2" } else { print $0,$4,"nuts3" }}  else { print $0,"idNUTS","typeNUTS" } }' | awk -f scientific2decimal_precision8.awk  > "${tableFile}"
-        done < tables_ifi.txt
-    done
+    while IFS="" read -r table || [ -n "$table" ]
+    do
+        table=`echo $table | tr "[:upper:]" "[:lower:]"`
+        tableFile="./tables_ifi/temp/${table// /}.csv"
+        #echo Exporting table ${table} from file $1 to ${tableFile}
+	#the 1st awk is necessary because there is an empty field in NUTS3 field sometimes (IFN4) so we duplicate NUTS2
+        mdb-export $1 "${table}" | awk 'BEGIN{FS=","; OFS="," } { if (NR>1) { if($4=="") { print $0,$3,"nuts2" } else { print $0,$4,"nuts3" }}  else { print $0,"idNUTS","typeNUTS" } }' | awk -f scientific2decimal_precision8.awk  > "${tableFile}"
+    done < tables_ifi.txt
     sort -u -o allTables_ifi.txt allTables_ifi.txt
 fi
 

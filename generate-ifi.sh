@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Process IF files
-./extractIFI.sh
+./extractIFI.sh $1
 
 # Run sparql-generate queries
 ./sparql-generate.sh -q ../sparql-generate/ifi/desnuts_ES.rqg -i tables_ifi/desnuts.csv -o _ES.ttl -v
