@@ -25,6 +25,7 @@ csvtk join -f Origen,Estrato tables/estratos_exs.csv tables/estratos.csv -o tabl
 ./sparql-generate.sh -q ../sparql-generate/ifn/pcparcelas.rqg -i tables/pcparcelas.csv -v
 ./sparql-generate.sh -q ../sparql-generate/ifn/pcregenera.rqg -i tables/pcregenera.csv -v
 ./sparql-generate.sh -q ../sparql-generate/ifn/provincias_exs.rqg -i tables/provincias_exs.csv -v
+./sparql-generate.sh -q ../sparql-generate/ifn/tarifasifn3.rqg -i tables/tarifasifn3.csv -v
 
 
 
