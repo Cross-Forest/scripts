@@ -40,7 +40,7 @@ declare sparqlgenerate1="/usr/local/lib/sparql-generate-1.1.jar"
 declare sparqlgenerate2="/usr/local/lib/sparql-generate-2.0-SNAPSHOT.jar"
 declare jarpath=$sparqlgenerate1
 declare givenjar=""
-declare javaparameters="-Xmx5000M"
+declare javaparameters="-Xmx15000M"
 declare source="urn:source"
 declare fquery="query.rqg"
 declare finput
