@@ -30,4 +30,4 @@ sed -i 's/)))/))/g' data/*.ttl
 ./sparql-generate.sh -q ../sparql-generate/mfe/mfe25/mfe_t_clase.rqg -i tables_mfe/mfe_tipoestrmfe50.csv
 ./sparql-generate.sh -q ../sparql-generate/mfe/mfe25/mfe_t_clase50.rqg -i tables_mfe/mfe_t_clase.csv
 ./sparql-generate.sh -q ../sparql-generate/mfe/mfe25/tbcod_prov_ccaa.rqg -i tables_mfe/mfe_t_clase50.csv
-./sparql-generate.sh -q ../sparql-generate/mfe/mfe25/mfe_pasarela_maxa_lulucf.rq -i tables_mfe/tbcod_prov_ccaa.csv
+./sparql-generate.sh -q ../sparql-generate/mfe/mfe25/mfe_pasarela_maxa_lulucf.rqg -i tables_mfe/tbcod_prov_ccaa.csv
