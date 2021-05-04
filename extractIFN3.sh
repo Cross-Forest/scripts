@@ -45,7 +45,12 @@ then
             tableFile="./tables/temp/${table// /}-${province}.csv"
             #echo Exporting table ${table} from file ${dbFile} to ${tableFile}
             #the 1st sed is necessary because there is (at least) one table with wrong name table
-            mdb-export ${dbFile} "${table}" | awk -f scientific2decimal.awk | sed "1,1s|Distancia|Distanci|" | sed "1,1s|^|Origen,|" | sed  "2,\$s|^|${province},|" > "${tableFile}"
+            if [[ "${table}" = "tarifasifn3" ]] 
+            then
+                mdb-export ${dbFile} "${table}" | awk -f scientific2decimal_precision14.awk | sed "1,1s|Distancia|Distanci|" | sed "1,1s|^|Origen,|" | sed  "2,\$s|^|${province},|" > "${tableFile}"
+            else
+                mdb-export ${dbFile} "${table}" | awk -f scientific2decimal_precision8.awk | sed "1,1s|Distancia|Distanci|" | sed "1,1s|^|Origen,|" | sed  "2,\$s|^|${province},|" > "${tableFile}"
+            fi
         done < tables.txt
     done
     sort -u -o allTables.txt allTables.txt
