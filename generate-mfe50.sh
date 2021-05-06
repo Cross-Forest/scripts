@@ -10,3 +10,4 @@
 
 sed -i 's/(((/((/g' data/*.ttl
 sed -i 's/)))/))/g' data/*.ttl
+sed -i 's/\(MULTIPOLYGON((\)\([^(].*\)))/\1(\2)))/g' data/*.ttl
