@@ -10,7 +10,6 @@ for f in $@
 do  
   real=$(realpath $f)
   base=$(basename $f)
-  globalid=${base%_*}
   json=${real%.json}.json
   box0=${json%.json}_b.json
   simplified=${json%.json}_s$s.json
@@ -26,7 +25,7 @@ do
   echo "Processing file json: $json"
 
   echo "*** Exporting to JSON *** $(date) ***"
-  mapshaper $f -proj +proj=longlat +datum=WGS84 +no_defs -clean -each "AREA2=this.area/10000,POLYGON=this.id,GLOBALID=$globalid" -o format=geojson precision=0.000001 $json
+  mapshaper $f -proj +proj=longlat +datum=WGS84 +no_defs -clean -each "AREA2=this.area/10000,POLYGON=this.id" -o format=geojson precision=0.000001 $json
   echo "*** Adding bounding box to original layer *** $(date) ***"
   mapshaper $json -each 'BBOX=this.bounds' -o $box0
   echo "*** Simplifying original layer *** $(date) ***"
