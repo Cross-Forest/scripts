@@ -38,4 +38,4 @@ csvtk join -f Origen,Estrato tables/estratos_exs.csv tables/estratos.csv -o tabl
 
 
 # Create positions for WGS84
-java -Xmx25000M -jar /usr/local/lib/epsgrdf-1.0-SNAPSHOT-jar-with-dependencies.jar tables/pcdatosmap.ttl tables/pcespparc.ttl tables/pcmayores.ttl ../Ontologies/epsg/Coordinate_Reference_System.ttl
+java -Xmx25000M -jar /usr/local/lib/epsgrdf-1.1-SNAPSHOT-jar-with-dependencies.jar tables/pcdatosmap.ttl tables/pcespparc.ttl tables/pcmayores.ttl ../Ontologies/epsg/Coordinate_Reference_System.ttl

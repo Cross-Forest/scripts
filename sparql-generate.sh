@@ -169,6 +169,7 @@ for fq in $fquery; do
             fout=${fi%.*}.$outputextension
             if [ ! -z $split ]; then
                 echo '' > $fout.tmp
+		echo '' > $fout
                 if [ ${fin: -5}  == ".json" ]; then
                     tail -n +2 "$fin" | head -n -1 | split -l $split - "$fin"_split_
                 else
@@ -184,11 +185,14 @@ for fq in $fquery; do
                     echo $jarcommand
                     eval $jarcommand 2> $redirection
                     rm $fsplit
+		    cat $fout.tmp >> $fout
                 done
-                sed -i -e "/^@prefix/{w $fout.prefixes" -e 'd}' $fout.tmp
-                sort -u $fout.prefixes > $fout
-                cat $fout.tmp >> $fout
-                rm $fin.tmp $fout.tmp $fout.prefixes
+		# Remove all prefixes from $fout
+                sed -i -e "/^@prefix/{w $fout.prefixes" -e 'd}' $fout
+                sort -u $fout.prefixes > $fout.tmp
+		cat $fout >> $fout.tmp
+		mv $fout.tmp $fout
+                rm $fin.tmp $fout.prefixes
             else
                 jarcommand=$(buildcommand -q $fq -o $fout --source \"$source\"=\"file://$fin\")
                 echo $jarcommand
